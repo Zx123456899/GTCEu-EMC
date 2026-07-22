@@ -121,7 +121,7 @@ public class EMCRegistry {
     }
 
     public void applyToProjectE() {
-        if (!net.minecraftforge.fml.ModLoader.isModLoaded("projecte")) {
+        if (!isProjectELoaded()) {
             return;
         }
 
@@ -145,7 +145,7 @@ public class EMCRegistry {
     }
 
     public void registerAllMaterialItems() {
-        for (Material material : GTRegistries.MATERIALS) {
+        for (Material material : GTRegistries.MATERIALS.getMaterials()) {
             long matEMC = getMaterialEMC(material);
             if (matEMC <= 0) continue;
 
@@ -159,5 +159,9 @@ public class EMCRegistry {
                 }
             }
         }
+    }
+
+    private boolean isProjectELoaded() {
+        return ForgeRegistries.MODS.containsKey("projecte");
     }
 }

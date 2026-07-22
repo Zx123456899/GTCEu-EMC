@@ -7,6 +7,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,6 @@ public class CommonProxy {
     }
     
     private static boolean isProjectELoaded() {
-        return net.minecraftforge.fml.ModLoader.isModLoaded("projecte");
+        return ForgeRegistries.MODS.containsKey("projecte");
     }
 }

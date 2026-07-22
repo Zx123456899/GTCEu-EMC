@@ -2,7 +2,7 @@ package com.gregtechceu.gtceuemc.emc;
 
 import com.gregtechceu.gtceu.api.data.chemical.Element;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
-import com.gregtechceu.gtceu.api.data.chemical.material.info.MaterialFlag;
+import com.gregtechceu.gtceu.api.data.chemical.material.info.MaterialFlags;
 import com.gregtechceu.gtceu.api.data.chemical.material.properties.PropertyKey;
 import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialStack;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
@@ -172,11 +172,11 @@ public class MaterialEMCGenerator {
             return customMaterialEMC.get(name);
         }
 
-        if (material.hasFlag(MaterialFlag.NO_UNIFICATION)) {
+        if (material.hasFlag(MaterialFlags.NO_UNIFICATION)) {
             return 0L;
         }
 
-        if (material.hasFlag(MaterialFlag.DISABLE_MATERIAL_RECIPES)) {
+        if (material.hasFlag(MaterialFlags.DISABLE_MATERIAL_RECIPES)) {
             return 0L;
         }
 
@@ -262,7 +262,7 @@ public class MaterialEMCGenerator {
     public void generateAndRegisterAll() {
         EMCRegistry registry = EMCRegistry.getInstance();
 
-        for (Material material : GTRegistries.MATERIALS) {
+        for (Material material : GTRegistries.MATERIALS.getMaterials()) {
             long emc = calculateMaterialEMC(material);
             if (emc > 0) {
                 registry.registerMaterialEMC(material, emc);
@@ -273,8 +273,8 @@ public class MaterialEMCGenerator {
         registry.registerPrefixMultiplier(TagPrefix.nugget, 1L);
         registry.registerPrefixMultiplier(TagPrefix.block, 9L);
         registry.registerPrefixMultiplier(TagPrefix.dust, 1L);
-        registry.registerPrefixMultiplier(TagPrefix.smallDust, 1L);
-        registry.registerPrefixMultiplier(TagPrefix.tinyDust, 1L);
+        registry.registerPrefixMultiplier(TagPrefix.dustSmall, 1L);
+        registry.registerPrefixMultiplier(TagPrefix.dustTiny, 1L);
         registry.registerPrefixMultiplier(TagPrefix.gem, 1L);
         registry.registerPrefixMultiplier(TagPrefix.gemChipped, 1L);
         registry.registerPrefixMultiplier(TagPrefix.gemFlawed, 1L);
@@ -287,38 +287,21 @@ public class MaterialEMCGenerator {
         registry.registerPrefixMultiplier(TagPrefix.crushedPurified, 4L);
         registry.registerPrefixMultiplier(TagPrefix.plate, 1L);
         registry.registerPrefixMultiplier(TagPrefix.plateDouble, 2L);
-        registry.registerPrefixMultiplier(TagPrefix.plateTriple, 3L);
         registry.registerPrefixMultiplier(TagPrefix.plateDense, 4L);
-        registry.registerPrefixMultiplier(TagPrefix.fineWire, 1L);
-        registry.registerPrefixMultiplier(TagPrefix.wire, 1L);
-        registry.registerPrefixMultiplier(TagPrefix.coil, 1L);
+        registry.registerPrefixMultiplier(TagPrefix.wireFine, 1L);
         registry.registerPrefixMultiplier(TagPrefix.rod, 1L);
-        registry.registerPrefixMultiplier(TagPrefix.stick, 1L);
         registry.registerPrefixMultiplier(TagPrefix.gear, 4L);
         registry.registerPrefixMultiplier(TagPrefix.gearSmall, 1L);
         registry.registerPrefixMultiplier(TagPrefix.screw, 1L);
         registry.registerPrefixMultiplier(TagPrefix.bolt, 2L);
-        registry.registerPrefixMultiplier(TagPrefix.nut, 1L);
         registry.registerPrefixMultiplier(TagPrefix.spring, 2L);
-        registry.registerPrefixMultiplier(TagPrefix.piston, 4L);
-        registry.registerPrefixMultiplier(TagPrefix.casing, 4L);
-        registry.registerPrefixMultiplier(TagPrefix.frame, 4L);
+        registry.registerPrefixMultiplier(TagPrefix.springSmall, 1L);
+        registry.registerPrefixMultiplier(TagPrefix.frameGt, 4L);
         registry.registerPrefixMultiplier(TagPrefix.foil, 1L);
         registry.registerPrefixMultiplier(TagPrefix.ingotHot, 1L);
         registry.registerPrefixMultiplier(TagPrefix.rotor, 6L);
         registry.registerPrefixMultiplier(TagPrefix.turbineBlade, 4L);
-        registry.registerPrefixMultiplier(TagPrefix.turbineCasing, 6L);
-        registry.registerPrefixMultiplier(TagPrefix.hull, 8L);
-        registry.registerPrefixMultiplier(TagPrefix.circuit, 4L);
-        registry.registerPrefixMultiplier(TagPrefix.circuitBoard, 2L);
-        registry.registerPrefixMultiplier(TagPrefix.dataOrb, 16L);
         registry.registerPrefixMultiplier(TagPrefix.lens, 2L);
-        registry.registerPrefixMultiplier(TagPrefix.mirror, 2L);
-        registry.registerPrefixMultiplier(TagPrefix.laserFocus, 8L);
-        registry.registerPrefixMultiplier(TagPrefix.battery, 4L);
-        registry.registerPrefixMultiplier(TagPrefix.cell, 1L);
-        registry.registerPrefixMultiplier(TagPrefix.plateTriple, 3L);
-        registry.registerPrefixMultiplier(TagPrefix.stick, 1L);
 
         registry.registerAllMaterialItems();
     }

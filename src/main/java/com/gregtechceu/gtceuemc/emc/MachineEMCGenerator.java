@@ -1,6 +1,7 @@
 package com.gregtechceu.gtceuemc.emc;
 
 import com.gregtechceu.gtceu.api.GTValues;
+import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 
 import net.minecraft.world.item.Item;
@@ -123,9 +124,8 @@ public class MachineEMCGenerator {
     public static void generateAndRegisterAll() {
         EMCRegistry registry = EMCRegistry.getInstance();
 
-        for (var entry : GTRegistries.MACHINES) {
-            String name = entry.getKey().getPath().toLowerCase();
-            var definition = entry.getValue();
+        for (MachineDefinition definition : GTRegistries.MACHINES) {
+            String name = definition.getId().getPath().toLowerCase();
             int tier = definition.getTier();
 
             long baseEMC = 0;
