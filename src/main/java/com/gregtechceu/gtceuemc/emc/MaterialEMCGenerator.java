@@ -262,7 +262,7 @@ public class MaterialEMCGenerator {
     public void generateAndRegisterAll() {
         EMCRegistry registry = EMCRegistry.getInstance();
 
-        for (Material material : GTRegistries.MATERIALS.getMaterials()) {
+        for (Material material : GTRegistries.MATERIALS) {
             long emc = calculateMaterialEMC(material);
             if (emc > 0) {
                 registry.registerMaterialEMC(material, emc);

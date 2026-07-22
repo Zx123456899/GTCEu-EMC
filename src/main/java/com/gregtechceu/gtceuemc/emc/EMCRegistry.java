@@ -9,7 +9,8 @@ import com.gregtechceu.gtceu.api.registry.GTRegistries;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.fml.loading.FMLConfig;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
@@ -145,7 +146,7 @@ public class EMCRegistry {
     }
 
     public void registerAllMaterialItems() {
-        for (Material material : GTRegistries.MATERIALS.getMaterials()) {
+        for (Material material : GTRegistries.MATERIALS) {
             long matEMC = getMaterialEMC(material);
             if (matEMC <= 0) continue;
 
@@ -162,6 +163,6 @@ public class EMCRegistry {
     }
 
     private boolean isProjectELoaded() {
-        return ForgeRegistries.MODS.containsKey("projecte");
+        return FMLLoader.getLoadingModList().getModFileById("projecte") != null;
     }
 }
