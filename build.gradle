@@ -64,10 +64,15 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev"
     }
+    
+    exclusiveContent {
+        forRepository { maven { url = "https://api.modrinth.com/maven" } }
+        filter { includeGroup("maven.modrinth") }
+    }
 }
 
 dependencies {
-    modCompileOnly('maven.modrinth:gtceu:8.0.0')
+    modCompileOnly('curse.maven:gregtech-modern-305492:5383706')
     
     modCompileOnly('curse.maven:projecte-240793:4544454')
     
