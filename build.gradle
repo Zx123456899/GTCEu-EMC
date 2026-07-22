@@ -33,11 +33,27 @@ legacyForge {
 }
 
 repositories {
-    maven { url = "https://repo.gtceu.dev/releases" }
-    maven { url = "https://repo.gtceu.dev/snapshots" }
-    maven { url = "https://cursemaven.com" }
-    maven { url = "https://maven.modrinth.com" }
-    maven { url = "https://jitpack.io" }
+    mavenCentral()
+    
+    maven {
+        name = 'GTCEu Maven'
+        url = 'https://maven.gtceu.com'
+    }
+    
+    maven {
+        name = "CurseMaven"
+        url = "https://cursemaven.com"
+    }
+    
+    maven {
+        name = "Latvian Maven"
+        url = "https://maven.latvian.dev/releases"
+    }
+    
+    maven {
+        name = "Modrinth API"
+        url = "https://api.modrinth.com/maven"
+    }
 }
 
 dependencies {
