@@ -1,0 +1,18 @@
+[versions]
+minecraft = "1.20.1"
+forge = "47.3.0"
+minecraftForge = "1.20.1-47.3.0"
+modDevGradle = "2.0.142"
+gtceu = "8.0.0"
+projecte = "454454"
+kubejs = "2001.6.5-build.16"
+
+[libraries]
+minecraft               = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+minecraftForge          = { module = "net.minecraftforge:forge", version.ref = "minecraftForge" }
+gtceu                   = { module = "com.gregtechceu.gtceu:gtceu", version.ref = "gtceu" }
+projecte                = { module = "curse.maven:projecte-240793", version.ref = "projecte" }
+kubejs                  = { module = "dev.latvian.mods:kubejs-forge", version.ref = "kubejs" }
+
+[plugins]
+modDevGradle            = { id = "net.neoforged.moddev.legacyforge", version.ref = "modDevGradle" }

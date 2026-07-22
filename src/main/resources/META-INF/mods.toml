@@ -1,0 +1,20 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+issueTrackerURL="https://github.com/GregTechCEu/GTCEu-EMC/issues"
+showAsResourcePack=false
+logoFile="assets/gtceuemc/logo.png"
+
+[[mods]]
+modId="gtceuemc"
+version="${version}"
+displayName="GTCEu EMC"
+authors="GregTechCEu"
+description='''
+Adds EMC values to all GregTech items for ProjectE compatibility.
+'''
+dependencies {
+    forge=">=47"
+    gtceu=">=8.0.0"
+    projecte=">=1.0.0"
+}
