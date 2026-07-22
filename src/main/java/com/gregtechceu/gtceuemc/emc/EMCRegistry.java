@@ -5,16 +5,16 @@ import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.GTValues;
-import com.gregtechceu.gtceu.api.registry.GTRegistries;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.loading.FMLConfig;
 import net.minecraftforge.fml.loading.FMLLoader;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 
+import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -146,19 +146,34 @@ public class EMCRegistry {
     }
 
     public void registerAllMaterialItems() {
-        for (Material material : GTRegistries.MATERIALS) {
-            long matEMC = getMaterialEMC(material);
-            if (matEMC <= 0) continue;
+        try {
+            Class<?> gtrRegistries = Class.forName("com.gregtechceu.gtceu.api.registry.GTRegistries");
+            Field materialsField = gtrRegistries.getField("MATERIALS");
+            Object materialsRegistry = materialsField.get(null);
+            
+            Field tagPrefixesField = gtrRegistries.getField("TAG_PREFIXES");
+            Object tagPrefixesRegistry = tagPrefixesField.get(null);
 
-            for (TagPrefix prefix : GTRegistries.TAG_PREFIXES) {
-                ItemStack stack = ChemicalHelper.get(prefix, material);
-                if (!stack.isEmpty() && !itemEMC.containsKey(stack.getItem())) {
-                    long itemEMC = getMaterialItemEMC(prefix, material);
-                    if (itemEMC > 0) {
-                        registerItemEMC(stack.getItem(), itemEMC);
+            Iterator<?> materialsIterator = ((Iterable<?>) materialsRegistry).iterator();
+            while (materialsIterator.hasNext()) {
+                Material material = (Material) materialsIterator.next();
+                long matEMC = getMaterialEMC(material);
+                if (matEMC <= 0) continue;
+
+                Iterator<?> prefixesIterator = ((Iterable<?>) tagPrefixesRegistry).iterator();
+                while (prefixesIterator.hasNext()) {
+                    TagPrefix prefix = (TagPrefix) prefixesIterator.next();
+                    ItemStack stack = ChemicalHelper.get(prefix, material);
+                    if (!stack.isEmpty() && !itemEMC.containsKey(stack.getItem())) {
+                        long itemEMC = getMaterialItemEMC(prefix, material);
+                        if (itemEMC > 0) {
+                            registerItemEMC(stack.getItem(), itemEMC);
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            GTCEuEMC.LOGGER.warn("Failed to register material items: {}", e.getMessage());
         }
     }
 

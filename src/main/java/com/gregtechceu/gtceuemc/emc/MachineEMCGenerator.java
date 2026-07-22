@@ -1,12 +1,13 @@
 package com.gregtechceu.gtceuemc.emc;
 
+import com.gregtechceu.gtceuemc.GTCEuEMC;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
-import com.gregtechceu.gtceu.api.registry.GTRegistries;
 
 import net.minecraft.world.item.Item;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class MachineEMCGenerator {
@@ -124,34 +125,44 @@ public class MachineEMCGenerator {
     public static void generateAndRegisterAll() {
         EMCRegistry registry = EMCRegistry.getInstance();
 
-        for (MachineDefinition definition : GTRegistries.MACHINES) {
-            String name = definition.getId().getPath().toLowerCase();
-            int tier = definition.getTier();
+        try {
+            Class<?> gtrRegistries = Class.forName("com.gregtechceu.gtceu.api.registry.GTRegistries");
+            java.lang.reflect.Field machinesField = gtrRegistries.getField("MACHINES");
+            Object machinesRegistry = machinesField.get(null);
 
-            long baseEMC = 0;
+            Iterator<?> iterator = ((Iterable<?>) machinesRegistry).iterator();
+            while (iterator.hasNext()) {
+                MachineDefinition definition = (MachineDefinition) iterator.next();
+                String name = definition.getId().getPath().toLowerCase();
+                int tier = definition.getTier();
 
-            if (STEAM_MACHINE_EMC.containsKey(name)) {
-                baseEMC = STEAM_MACHINE_EMC.get(name);
-            } else if (ELECTRIC_MACHINE_BASE_EMC.containsKey(name)) {
-                baseEMC = ELECTRIC_MACHINE_BASE_EMC.get(name);
-                if (tier >= 0 && tier < TIER_MULTIPLIERS.length) {
-                    baseEMC *= TIER_MULTIPLIERS[tier];
+                long baseEMC = 0;
+
+                if (STEAM_MACHINE_EMC.containsKey(name)) {
+                    baseEMC = STEAM_MACHINE_EMC.get(name);
+                } else if (ELECTRIC_MACHINE_BASE_EMC.containsKey(name)) {
+                    baseEMC = ELECTRIC_MACHINE_BASE_EMC.get(name);
+                    if (tier >= 0 && tier < TIER_MULTIPLIERS.length) {
+                        baseEMC *= TIER_MULTIPLIERS[tier];
+                    }
+                } else if (MULTIBLOCK_MACHINE_EMC.containsKey(name)) {
+                    baseEMC = MULTIBLOCK_MACHINE_EMC.get(name);
+                    if (tier >= 0 && tier < TIER_MULTIPLIERS.length) {
+                        baseEMC *= TIER_MULTIPLIERS[tier];
+                    }
+                } else {
+                    baseEMC = calculateTieredMachineEMC(tier);
                 }
-            } else if (MULTIBLOCK_MACHINE_EMC.containsKey(name)) {
-                baseEMC = MULTIBLOCK_MACHINE_EMC.get(name);
-                if (tier >= 0 && tier < TIER_MULTIPLIERS.length) {
-                    baseEMC *= TIER_MULTIPLIERS[tier];
+
+                if (baseEMC > 0) {
+                    Item item = definition.getItem();
+                    if (item != null) {
+                        registry.registerItemEMC(item, baseEMC);
+                    }
                 }
-            } else {
-                baseEMC = calculateTieredMachineEMC(tier);
             }
-
-            if (baseEMC > 0) {
-                Item item = definition.getItem();
-                if (item != null) {
-                    registry.registerItemEMC(item, baseEMC);
-                }
-            }
+        } catch (Exception e) {
+            GTCEuEMC.LOGGER.warn("Failed to generate machine EMC: {}", e.getMessage());
         }
     }
 

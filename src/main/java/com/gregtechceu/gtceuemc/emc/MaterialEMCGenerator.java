@@ -1,14 +1,15 @@
 package com.gregtechceu.gtceuemc.emc;
 
+import com.gregtechceu.gtceuemc.GTCEuEMC;
 import com.gregtechceu.gtceu.api.data.chemical.Element;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.chemical.material.info.MaterialFlags;
 import com.gregtechceu.gtceu.api.data.chemical.material.properties.PropertyKey;
 import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialStack;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
-import com.gregtechceu.gtceu.api.registry.GTRegistries;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -262,11 +263,21 @@ public class MaterialEMCGenerator {
     public void generateAndRegisterAll() {
         EMCRegistry registry = EMCRegistry.getInstance();
 
-        for (Material material : GTRegistries.MATERIALS) {
-            long emc = calculateMaterialEMC(material);
-            if (emc > 0) {
-                registry.registerMaterialEMC(material, emc);
+        try {
+            Class<?> gtrRegistries = Class.forName("com.gregtechceu.gtceu.api.registry.GTRegistries");
+            java.lang.reflect.Field materialsField = gtrRegistries.getField("MATERIALS");
+            Object materialsRegistry = materialsField.get(null);
+
+            Iterator<?> iterator = ((Iterable<?>) materialsRegistry).iterator();
+            while (iterator.hasNext()) {
+                Material material = (Material) iterator.next();
+                long emc = calculateMaterialEMC(material);
+                if (emc > 0) {
+                    registry.registerMaterialEMC(material, emc);
+                }
             }
+        } catch (Exception e) {
+            GTCEuEMC.LOGGER.warn("Failed to generate material EMC: {}", e.getMessage());
         }
 
         registry.registerPrefixMultiplier(TagPrefix.ingot, 1L);
