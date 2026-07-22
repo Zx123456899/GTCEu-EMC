@@ -317,8 +317,8 @@ public class MaterialEMCGenerator {
         registry.registerPrefixMultiplier(TagPrefix.laserFocus, 8L);
         registry.registerPrefixMultiplier(TagPrefix.battery, 4L);
         registry.registerPrefixMultiplier(TagPrefix.cell, 1L);
-        registry.registerPrefixMultiplier(TagPrefix.crystal, 4L);
-        registry.registerPrefixMultiplier(TagPrefix.crystalLarge, 8L);
+        registry.registerPrefixMultiplier(TagPrefix.plateTriple, 3L);
+        registry.registerPrefixMultiplier(TagPrefix.stick, 1L);
 
         registry.registerAllMaterialItems();
     }
